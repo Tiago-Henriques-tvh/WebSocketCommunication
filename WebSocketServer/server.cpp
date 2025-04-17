@@ -39,8 +39,8 @@ std::string AskDeepSeek(const std::string &question) {
     curl_slist_free_all(headers);
     curl_easy_cleanup(curl);
 
-    if (res_code != CURLE_OK) {
-        return "Erro ao comunicar com o DeepSeek.";
+    if (res_code != CURLE_OK) {d
+        return "[ERROR] Cant connect to DeepSeek.";
     }
     return res.data;
 }
@@ -49,12 +49,12 @@ std::string AskDeepSeek(const std::string &question) {
 static int CallbackWs(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len) {
     if (reason == LWS_CALLBACK_RECEIVE) {
         std::string question(static_cast<char *>(in), len);
-        std::cout << "Recebido: " << question << std::endl;
+        std::cout << "Received: " << question << std::endl;
 
         std::string reply = AskDeepSeek(question);
 
         lws_write(wsi, (unsigned char *)reply.c_str(), reply.length(), LWS_WRITE_TEXT);
-        std::cout << "Enviado: " << reply << std::endl;
+        std::cout << "Sent: " << reply << std::endl;
     }
     return 0;
 }
@@ -75,11 +75,11 @@ int main() {
 
     struct lws_context *context = lws_create_context(&info);
     if (!context) {
-        std::cerr << "Erro ao criar contexto WebSocket" << std::endl;
+        std::cerr << "[Error] Creating WebSocket context." << std::endl;
         return -1;
     }
 
-    std::cout << "Servidor WebSocket iniciado na porta " << PORT << "..." << std::endl;
+    std::cout << "WebSocket server started at port " << PORT << "..." << std::endl;
     while (true) {
         lws_service(context, 50);
     }

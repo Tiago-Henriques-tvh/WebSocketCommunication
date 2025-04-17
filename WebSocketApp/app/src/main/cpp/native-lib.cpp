@@ -22,15 +22,15 @@ static bool is_running = true;
 static int CallbackWs(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len) {
     switch (reason) {
         case LWS_CALLBACK_CLIENT_ESTABLISHED:
-            LOGI("Conectado ao servidor WebSocket");
+            LOGI("Connected to WebSocket server");
             break;
 
         case LWS_CALLBACK_CLIENT_RECEIVE:
-            LOGI("Resposta do servidor: %.*s", (int)len, (char *)in);
+            LOGI("Response from server: %.*s", (int)len, (char *)in);
             break;
 
         case LWS_CALLBACK_CLIENT_CLOSED:
-            LOGI("Conexão WebSocket fechada");
+            LOGI("WebSocket connection closed");
             is_running = false;
             break;
 
@@ -53,13 +53,13 @@ Java_com_teuapp_WebSocketClient_nativeStartClient(JNIEnv *env, jobject obj) {
 
     context = lws_create_context(&info);
     if (!context) {
-        LOGI("Erro ao criar contexto WebSocket");
+        LOGI("Error creating WebSocket context");
         return;
     }
 
     struct lws_client_connect_info ccinfo = {};
     ccinfo.context = context;
-    ccinfo.address = "raspberrypi.local";  // IP ou hostname da Raspberry Pi
+    ccinfo.address = "raspberrypi.local";  // IP or hostname of the Raspberry Pi
     ccinfo.port = 8765;
     ccinfo.path = "/";
     ccinfo.host = ccinfo.address;
@@ -69,7 +69,7 @@ Java_com_teuapp_WebSocketClient_nativeStartClient(JNIEnv *env, jobject obj) {
     wsi_client = lws_client_connect_via_info(&ccinfo);
 
     if (!wsi_client) {
-        LOGI("Falha ao conectar ao servidor WebSocket");
+        LOGI("Failed to connect to WebSocket server");
         return;
     }
 
